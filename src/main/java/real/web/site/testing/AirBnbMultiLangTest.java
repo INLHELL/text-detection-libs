@@ -32,9 +32,11 @@ public class AirBnbMultiLangTest {
     private static final Logger log = getLogger(AirBnbMultiLangTest.class);
 
     public static void main(String[] args) throws LangDetectException, IOException {
-        String sUrl = "https://sv.airbnb.com/s/Paris--France?source=ds&page=1&s_tag=6UDbZKfk&allow_override%5B%5D=";
+        String sUrl = "https://en.wikipedia.org/wiki/Barack_Obama";
         final Document document = Jsoup.connect(sUrl).get();
         String text = document.text();
+        log.info("Text size kilobytes: {}", text.getBytes().length / 1024);
+        log.info("Text size bytes: {}", text.getBytes().length);
 
         System.out.println("------------------ Test - 1 ------------------");
         DetectorFactory.loadProfile(new File("src/main/resources/profiles/"));
@@ -54,8 +56,8 @@ public class AirBnbMultiLangTest {
         //build language detector:
         LanguageDetector languageDetector = LanguageDetectorBuilder.create(NgramExtractors.backwards())
                 .withProfiles(languageProfiles)
-                .probabilityThreshold(0.000001)
-                .alpha(0.000000001)
+//                .probabilityThreshold(0.000001)
+//                .alpha(0.000000001)
                 .build();
 
         //create a text object factory
