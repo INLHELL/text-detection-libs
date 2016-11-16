@@ -75,8 +75,8 @@ public class LanguageDetectorJMHTest {
     @BenchmarkMode(Mode.AverageTime) // Calculate an average running time.
     @OutputTimeUnit(TimeUnit.MILLISECONDS)
     public List<DetectedLanguage> getProbabilities() throws  InterruptedException {
-        TextObject textObjectForBigFile = textObjectFactory.forText(text);
-        List<DetectedLanguage>  probabilities = languageDetector.getProbabilities(textObjectForBigFile);
+        TextObject textObject = textObjectFactory.forText(text);
+        List<DetectedLanguage>  probabilities = languageDetector.getProbabilities(textObject);
         return probabilities;
     }
 }

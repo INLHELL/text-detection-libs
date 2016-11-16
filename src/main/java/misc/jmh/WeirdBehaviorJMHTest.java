@@ -64,7 +64,7 @@ public class WeirdBehaviorJMHTest {
     @Benchmark
     @BenchmarkMode(Mode.AverageTime) // Calculate an average running time.
     @OutputTimeUnit(TimeUnit.MILLISECONDS)
-    public CharSequence getProbabilities() throws InterruptedException {
+    public CharSequence getTextViaTextObject() throws InterruptedException {
         TextObject textObject = new TextObject(new MultiTextFilter(textFilters), 10_000);
         textObject = textObject.append(text);
         return textObject;
