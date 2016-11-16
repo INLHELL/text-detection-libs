@@ -39,7 +39,6 @@ public class TikaJMHTest {
             "https://en.wikipedia.org/wiki/Barack_Obama"                                                   // 187 Kb
     })
     private String url;
-    private OptimaizeLangDetector languageDetector;
 
     /**
      * This is a default level. Before/after entire benchmark run (group of iteration)
@@ -49,8 +48,7 @@ public class TikaJMHTest {
         final Document document = Jsoup.connect(url).get();
         text = document.text();
 
-        languageDetector = new OptimaizeLangDetector();
-        languageDetector.loadModels();
+
     }
 
     /**
@@ -67,6 +65,8 @@ public class TikaJMHTest {
     @BenchmarkMode(Mode.AverageTime) // Calculate an average running time.
     @OutputTimeUnit(TimeUnit.MILLISECONDS)
     public List<LanguageResult> getProbabilities() throws InterruptedException, IOException {
+        OptimaizeLangDetector languageDetector = new OptimaizeLangDetector();
+        languageDetector.loadModels();
         languageDetector.addText(text);
         final List<LanguageResult> languageResults = languageDetector.detectAll();
         languageDetector.reset();

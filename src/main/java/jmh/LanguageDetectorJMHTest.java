@@ -46,8 +46,8 @@ public class LanguageDetectorJMHTest {
     })
     private String url;
 
-    private LanguageDetector languageDetector;
     private TextObjectFactory textObjectFactory;
+    private List<LanguageProfile> languageProfiles;
 
     /**
      * This is a default level. Before/after entire benchmark run (group of iteration)
@@ -56,8 +56,7 @@ public class LanguageDetectorJMHTest {
     public void setup() throws IOException {
         final Document document = Jsoup.connect(url).get();
         text = document.text();
-        List<LanguageProfile> languageProfiles = new LanguageProfileReader().readAllBuiltIn();
-        languageDetector = LanguageDetectorBuilder.create(NgramExtractors.backwards()).withProfiles(languageProfiles).build();
+        languageProfiles = new LanguageProfileReader().readAllBuiltIn();
         textObjectFactory = CommonTextObjectFactories.forDetectingOnLargeText();
     }
 
@@ -76,6 +75,10 @@ public class LanguageDetectorJMHTest {
     @OutputTimeUnit(TimeUnit.MILLISECONDS)
     public List<DetectedLanguage> getProbabilities() throws  InterruptedException {
         TextObject textObject = textObjectFactory.forText(text);
+        LanguageDetector languageDetector = LanguageDetectorBuilder
+                .create(NgramExtractors.backwards())
+                .withProfiles(languageProfiles)
+                .build();
         List<DetectedLanguage>  probabilities = languageDetector.getProbabilities(textObject);
         return probabilities;
     }
