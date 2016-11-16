@@ -1,14 +1,8 @@
 package jmh;
 
-import com.optimaize.langdetect.DetectedLanguage;
-import com.optimaize.langdetect.LanguageDetector;
-import com.optimaize.langdetect.LanguageDetectorBuilder;
-import com.optimaize.langdetect.ngram.NgramExtractors;
-import com.optimaize.langdetect.profiles.LanguageProfile;
-import com.optimaize.langdetect.profiles.LanguageProfileReader;
-import com.optimaize.langdetect.text.CommonTextObjectFactories;
-import com.optimaize.langdetect.text.TextObject;
-import com.optimaize.langdetect.text.TextObjectFactory;
+import org.apache.tika.langdetect.OptimaizeLangDetector;
+import org.apache.tika.language.detect.LanguageDetector;
+import org.apache.tika.language.detect.LanguageResult;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.openjdk.jmh.annotations.Benchmark;
@@ -34,7 +28,7 @@ import java.util.concurrent.TimeUnit;
  * This is a default state. An instance will be allocated for each thread running the given test.
  */
 @State(Scope.Thread)
-public class LanguageDetectorJMHTest {
+public class TikaJMHTest {
 
     private String text;
 
@@ -46,9 +40,6 @@ public class LanguageDetectorJMHTest {
     })
     private String url;
 
-    private LanguageDetector languageDetector;
-    private TextObjectFactory textObjectFactory;
-
     /**
      * This is a default level. Before/after entire benchmark run (group of iteration)
      */
@@ -56,9 +47,6 @@ public class LanguageDetectorJMHTest {
     public void setup() throws IOException {
         final Document document = Jsoup.connect(url).get();
         text = document.text();
-        List<LanguageProfile> languageProfiles = new LanguageProfileReader().readAllBuiltIn();
-        languageDetector = LanguageDetectorBuilder.create(NgramExtractors.backwards()).withProfiles(languageProfiles).build();
-        textObjectFactory = CommonTextObjectFactories.forDetectingOnLargeText();
     }
 
     /**
@@ -74,9 +62,11 @@ public class LanguageDetectorJMHTest {
     @Benchmark
     @BenchmarkMode(Mode.AverageTime) // Calculate an average running time.
     @OutputTimeUnit(TimeUnit.MILLISECONDS)
-    public List<DetectedLanguage> getProbabilities() throws  InterruptedException {
-        TextObject textObjectForBigFile = textObjectFactory.forText(text);
-        List<DetectedLanguage>  probabilities = languageDetector.getProbabilities(textObjectForBigFile);
-        return probabilities;
+    public List<LanguageResult> getProbabilities() throws InterruptedException, IOException {
+        OptimaizeLangDetector languageDetector = new OptimaizeLangDetector();
+        languageDetector.loadModels();
+        languageDetector.addText(text);
+        final List<LanguageResult> languageResults = languageDetector.detectAll();
+        return languageResults;
     }
 }

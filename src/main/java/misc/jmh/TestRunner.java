@@ -1,6 +1,9 @@
-package jmh;
+package misc.jmh;
 
 import com.cybozu.labs.langdetect.LangDetectException;
+import jmh.LangDetectJMHTest;
+import jmh.LanguageDetectorJMHTest;
+import jmh.TikaJMHTest;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
@@ -15,9 +18,7 @@ import java.io.IOException;
 public class TestRunner {
     public static void main(String[] args) throws RunnerException, LangDetectException, IOException {
         Options opts = new OptionsBuilder()
-                .include(LangDetectJMHTest.class.getSimpleName())
-                .include(LanguageDetectorJMHTest.class.getSimpleName())
-                .include(TikaJMHTest.class.getSimpleName())
+                .include(WeirdBehaviorJMHTest.class.getSimpleName())
                 .build();
         new Runner(opts).run();
 
