@@ -69,7 +69,6 @@ public class TikaJMHTest {
         languageDetector.loadModels();
         languageDetector.addText(text);
         final List<LanguageResult> languageResults = languageDetector.detectAll();
-        languageDetector.reset();
         return languageResults;
     }
 }
